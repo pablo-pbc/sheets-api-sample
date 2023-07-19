@@ -133,7 +133,7 @@
             try {
                 response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: "1pd9qFoaW4DboxHSuchJJNvfVqd9bO-nkV76OvNLHP1o",
-                    range: "A1:Z1000",
+                    range: "A2:A18",
                 });
             } catch (err) {
                 document.getElementById("content").innerText = err.message;
@@ -149,19 +149,45 @@
                 (str, row) => `${str}${row.join(", ")}\n`,
                 "All Values:\n"
             );
+
+            const email = 'poliana.m.m@hotmail.com'
+
+            const cell = range.values.map(
+                response => {
+                    for (let index = 1; index < response.length; index++) {
+                        const element = response[index];
+                        if (element == email) {
+                            const values = [
+                                ['INATIVO'],
+                            ];
+
+                            try {
+                                const response = gapi.client.sheets.spreadsheets.values.update({
+                                    spreadsheetId: '1pd9qFoaW4DboxHSuchJJNvfVqd9bO-nkV76OvNLHP1o',
+                                    range: `D${index}`,
+                                    valueInputOption: 'RAW',
+                                    resource: { values },
+                                });
+                                console.log('Values updated:', response.result);
+                            } catch (err) {
+                                console.error('Error updating values:', err);
+                            }
+                        }
+                    }
+                }
+            );
             document.getElementById("content").innerText = output;
         }
 
         async function updateValues() {
             const values = [
-                ['Chama', 'No'],
-                ['progresso', 'hein'],
+                ['INATIVO'],
             ];
 
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.update({
                     spreadsheetId: '1pd9qFoaW4DboxHSuchJJNvfVqd9bO-nkV76OvNLHP1o',
-                    range: 'A1',
+                    range: 'D2',
                     valueInputOption: 'RAW',
                     resource: { values },
                 });
